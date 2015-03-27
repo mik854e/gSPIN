@@ -12,6 +12,8 @@ class Message {
 	public ArrayList<Person> cc;
 	public ArrayList<DFU> content;
 
+	public String temp;
+
 	public Message(int depth, String parent, String message_id, String date_time, String subject,
 					Person from, ArrayList<Person> to, ArrayList<Person> cc, ArrayList<DFU> content) {
 		this.depth = depth;
