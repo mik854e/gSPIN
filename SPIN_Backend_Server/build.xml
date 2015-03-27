@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<project name="SPIN" default="help">
+
+    <tstamp>
+        <format property="current.date" pattern="MMddyyyy"/>
+    </tstamp>
+
+    <!-- change on project creation: app.name -->
+    <property name="app.name" value="SPIN-Backend"/>
+    <property name="app.version" value="0.1"/>
+    <property name="app.vendor" value="Columbia University - CCLS"/>
+    <property name="release.name" value="${app.name}-release-${current.date}-${app.version}"/>
+    <property name="manual.name" value="${app.name}-UserManual.pdf"/>
+
+    <property name="lib.dir" location="lib"/>
+    <property name="dist.dir" location="dist"/>
+    <property name="classes.dir" location="classes"/>
+    <property name="instrumented.dir" location="${classes.dir}/instrumented"/>
+    <property name="doc.dir" location="doc"/>
+    <property name="resources.dir" location="resources/"/>
+    <property name="config.dir" location="config/"/>
+    <property name="javadoc.dir" location="${doc.dir}/javadoc"/>
+    <property name="test.reports.dir" location="doc/test-reports"/>
+    <property name="test.dir" location="test"/>
+    <property name="src.dir" location="src"/>
+
+    <property name="client.name" value="HttpClient"/>
+    <property name="server.name" value="HttpServer"/>
+    <property name="include.package.name" value="edu.columbia.ccls.**"/>
+    <property name="exclude.package" value="edu.columbia.ccls.doc-files.**"/>
+
+
+    <!--
+    Note: Before compiling the code, ensure that all library dependencies have been
+     specified in the classpath below.
+    -->
+    <path id="classpath.base">
+        <pathelement path="${classes.dir}"/>
+            <!--
+
+	<fileset dir="${lib.dir}" includes="commons-codec-1.6.jar"/>
+	<fileset dir="${lib.dir}" includes="commons-logging-1.1.1.jar"/>
+    <fileset dir="${lib.dir}" includes="commons-lang3-3.3.2.jar"/>
+	<fileset dir="${lib.dir}" includes="fluent-hc-4.2.1.jar"/>
+	<fileset dir="${lib.dir}" includes="httpclient-4.2.1.jar"/>
+	<fileset dir="${lib.dir}" includes="httpclient-cache-4.2.1.jar"/>
+	<fileset dir="${lib.dir}" includes="httpcore-4.2.1.jar"/>
+	<fileset dir="${lib.dir}" includes="httpmime-4.2.1.jar"/>
+     -->
+
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+        <fileset dir="${lib.dir}/gmail" includes="*.jar"/>
+    </path>
+
+	<target name="help">
+        <echo message="run-server: start the server"/>
+    </target>
+
+    <target name="clean">
+        <echo message="cleaning previously generated files..."/>
+        <delete dir="${classes.dir}"/>
+    </target>
+
+
+    <target name="compile" depends="clean">
+        <mkdir dir="${classes.dir}"/>
+        <javac destdir="${classes.dir}" debug="on" srcdir="${src.dir}" includeantruntime="false">
+            <classpath refid="classpath.base"/>
+        </javac>
+    </target>
+
+    <!--
+     Note: Set command line arguments (see ARGUMENTS)
+     ${server.name} GmailApiQuickstart
+     -->
+
+    <target name="run-server" depends="compile">
+        <java classname="${server.name}" fork="true">
+
+            <classpath refid="classpath.base"/>
+        </java>
+    </target>
+</project>
