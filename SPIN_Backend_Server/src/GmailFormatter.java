@@ -74,6 +74,7 @@ public class GmailFormatter {
 		Pattern p = Pattern.compile("(.+) <(.+@.+)>");
 		Matcher mat;
 
+        
 		for (MessagePartHeader mph : headers) {
 			if (mph.getName().equals("From")) {
 				mat = p.matcher(mph.getValue());
@@ -101,11 +102,28 @@ public class GmailFormatter {
 
 		String content = StringUtils.newStringUtf8(Base64.decodeBase64(mp.getParts().get(0).getBody().getData()));
 System.out.println(content);
-		content = StringEscapeUtils.escapeXml(content);
+        
+        content = StringEscapeUtils.escapeXml(content);
 
 		sb.append("<content>");
 		sb.append(System.lineSeparator());
-		sb.append(content);
+
+        // VP_HIST (03/29): a silly regex to match the history line
+        //		sb.append(content);
+        Pattern historypattern = Pattern.compile("On (Mon|Tue|Wed|Thu|Fri|Sat|Sun), (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d+, \\d+ at \\d+:\\d+ (AM|PM), .*" );
+        if (content != null) { // In case of forwarded messages, sometimes content is "null" and this end up showing "NULL" in the output with a conventional tag placed there. Thsi if-condition fixes it, but maybe we should find a cleaner way to handle that.
+            for (String line : content.split("\n")) {
+                Matcher historymatcher = historypattern.matcher(line);
+                if (historymatcher.find()) {
+                    System.out.println("Found history line =======: " + line);
+                    break;
+                }
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+        }
+        // End of VP_HIST
+        
 		sb.append(System.lineSeparator());
 		sb.append("</content>");
 		sb.append(System.lineSeparator());
