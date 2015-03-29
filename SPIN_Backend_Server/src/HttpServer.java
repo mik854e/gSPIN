@@ -192,13 +192,18 @@ class MyHandler implements HttpHandler {
   System.out.println(formatted_output);
 
           // Delete all files used by the analysis.
-      File f = new File(file_name); f.delete();
-          //input_file.delete();
-          output_file.delete();
+          File f = new File(file_name); f.delete();
+          
+          //VP_INDEL 03/29: deletes the input files
+          File input_file = new File("EndToEndSystem/SPIN_TrialIn", file_name);
+          input_file.delete();
+          
+         // output_file.delete();
           //output_file = new File(dir_out, file_name + ".tagged");
-          output_file = new File(dir_out, file_name + ".xmi");
-          output_file.delete();
-
+         // output_file = new File(dir_out, file_name + ".xmi");
+         // output_file.delete();
+          //VP_INDEL ends
+          
           // Send response.
           OutputStream responseBody = exchange.getResponseBody();
           responseBody.write(formatted_output.getBytes());
