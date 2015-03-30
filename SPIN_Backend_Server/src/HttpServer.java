@@ -155,7 +155,7 @@ class MyHandler implements HttpHandler {
       try {
         Gmail service = getGmailService(token);
         Thread thread = service.users().threads().get(USER, threadID).execute();
-        //System.out.println(thread.toPrettyString());
+  //System.out.println(thread.toPrettyString());
         String parsed_thread = GmailFormatter.formatThread(thread);
         System.out.println(parsed_thread);
         file_name = writeInputToFile(parsed_thread);
@@ -163,6 +163,7 @@ class MyHandler implements HttpHandler {
       catch (Exception e) {
         System.out.println("whhhyyyy erroooorr (gmail request)");
         e.printStackTrace();
+        return;
       }
 
 
@@ -172,7 +173,6 @@ class MyHandler implements HttpHandler {
         
         // Process input
         Runtime rt = Runtime.getRuntime();
-        //Process pr = rt.exec("java -jar SPIN_PairORGHP_Runner_120714.jar Runner.properties SPIN_TrialIn SPIN_TrialOut", null, dir);
         Process pr = rt.exec("java -jar SPIN_PairORGHP_Runner_032215.jar Runner.properties SPIN_TrialIn SPIN_TrialOut", null, dir);
         int exit_val = pr.waitFor();
 
@@ -211,8 +211,8 @@ class MyHandler implements HttpHandler {
       }
 
       catch (Exception e) {
-        System.out.println(e.toString());
         e.printStackTrace();
+        return;
       }
 
     }
