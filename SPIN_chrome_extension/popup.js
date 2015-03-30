@@ -147,7 +147,22 @@ function sendSpinRequest(threadID, token, callback) {
 document.addEventListener('DOMContentLoaded', function() {
   getCurrentTabUrl(function(url) {
 
-    var threadID = url.match(/.+#inbox\/(.+)/)[1];
+    //var threadID = url.match(/.+#inbox\/(.+)/)[1];
+    var inbox = url.match(/.+#inbox\/(.+)/);
+    var search = url.match(/.+#search\/.+\/(.+)/);
+    var threadID;
+
+    if (inbox) {
+      threadID = inbox[1];
+    }
+    else if (search) {
+      threadID = search[1];
+    }
+    else {
+      renderContent("Select a Gmail email thread.")
+      return;
+    }
+
     interactiveSignIn(function(token) {
       sendSpinRequest(threadID, token, function(response) {
         //renderStatus('Message ID: ' + msgID + '\n' +

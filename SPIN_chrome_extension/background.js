@@ -14,7 +14,6 @@
 	          new chrome.declarativeContent.PageStateMatcher({
 	            pageUrl: { 
 	            	hostContains: 'mail.google'
-	            	//urlSuffix: /#inbox\/.+/
 	            },
 	          })
 	        ],
