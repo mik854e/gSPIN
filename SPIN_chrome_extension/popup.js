@@ -93,6 +93,9 @@ function renderError(content) {
 function clearResults() {
     document.getElementById('power-graph').innerHTML = "";
     document.getElementById('content').innerHTML = "";
+    document.getElementById('content').style.margin = "50px 10px 20px 30px";
+    document.getElementById('content').align = "left";
+    document.getElementById('content').style.color = "black";
 }
 
 function handleCheckbox(cb) {
