@@ -82,6 +82,17 @@ function renderContent(content) {
   document.getElementById('content').innerHTML = content;
 }
 
+function handleCheckbox(cb) {
+  var cls = cb.value;
+  if (cb.checked) {
+    $(cls).show();
+  }
+  else {
+    $(cls).hide();
+  }
+
+}
+
 function sendSpinRequest(threadID, token, callback) {
   var serverURL = 'http://localhost:8230'; // '';http://localhost:8230'
   var x = new XMLHttpRequest();  
@@ -197,13 +208,21 @@ document.addEventListener('DOMContentLoaded', function() {
         jQuery(function(){
           var graph = new Springy.Graph();
           graph.loadJSON(graphJSON);
+          renderContent(data.html);
 
           var springy = jQuery('#springydemo').springy({
             graph: graph
           });
         });
 
-        renderContent(data.html);
+        var cb1 = document.getElementById("request-cb");
+        cb1.addEventListener("click", function() {handleCheckbox(cb1)});       
+        var cb2 = document.getElementById("conventional-cb");
+        cb2.addEventListener("click", function() {handleCheckbox(cb2)});       
+        var cb3 = document.getElementById("inform-cb");
+        cb3.addEventListener("click", function() {handleCheckbox(cb3)});
+
+
       });
     });
     //renderStatus('Performing Google Image search for ' + msgID);
