@@ -55,6 +55,9 @@ public class OutputFormatter {
     for (Person p : m.to) {
       sb.append(p.name+", ");
     }
+    for (Person p : m.cc) {
+      sb.append(p.name+", ");
+    }
     sb.append("<br><br>");
 
     // Body

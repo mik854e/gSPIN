@@ -196,7 +196,7 @@ class MyHandler implements HttpHandler {
           
           //VP_INDEL 03/29: deletes the input files
           File input_file = new File("EndToEndSystem/SPIN_TrialIn", file_name);
-          input_file.delete();
+          //input_file.delete();
           
          // output_file.delete();
           //output_file = new File(dir_out, file_name + ".tagged");
