@@ -1,5 +1,7 @@
 body {
   width: 700px;
+  border-style: groove;
+  border-width: medium;
 }
 
 mark {

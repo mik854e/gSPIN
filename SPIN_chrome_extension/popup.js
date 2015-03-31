@@ -82,6 +82,19 @@ function renderContent(content) {
   document.getElementById('content').innerHTML = content;
 }
 
+function renderError(content) {
+    document.getElementById('content').style.margin = "50px 10px 20px 30px";
+    document.getElementById('content').align = "center";
+    document.getElementById('content').style.color = "red";
+    //    content = "<div style=\"color:red margin:\"50px 10px 20px 30px\"\" align=\"center\">" + content + "</div>";
+    document.getElementById('content').innerHTML = content;
+}
+
+function clearResults() {
+    document.getElementById('power-graph').innerHTML = "";
+    document.getElementById('content').innerHTML = "";
+}
+
 function handleCheckbox(cb) {
   var cls = cb.value;
   if (cb.checked) {
@@ -155,24 +168,39 @@ function sendSpinRequest(threadID, token, callback) {
     // @corecode_end getAuthToken
   }
 
-document.addEventListener('DOMContentLoaded', function() {
-  getCurrentTabUrl(function(url) {
+document.addEventListener('DOMContentLoaded', function () {
+                          document.querySelector('button').addEventListener('click', clickHandler);
+                          });
 
-    //var threadID = url.match(/.+#inbox\/(.+)/)[1];
-    var inbox = url.match(/.+#inbox\/(.+)/);
-    var search = url.match(/.+#search\/.+\/(.+)/);
-    var threadID;
+function clickHandler() {
+    getCurrentTabUrl(function(url) {
+                     
+     clearResults();
+     
+     if(!$('#powerpred').prop('checked') && !$('#dialoganal').prop('checked')) {
+     renderError("Select at least one analysis option!");
+     return;
+     }
+     
+     //    renderContent(document.querySelector('powerpred'))
+     //    renderContent("<div class=\"loading\"><div class=\"progress\"><div class=\"progress-bar progress-bar-striped active\" role=\"progressbar\" aria-valuenow=\"45\" aria-valuemin=\"0\" aria-valuemax=\"100\"><span class=\"sr-only\">Processing...</span></div></div></div>")
+     renderContent("<div class=\"loading\"><div class=\"progress\"><div class=\"progress-bar progress-bar-striped active\" role=\"progressbar\" aria-valuenow=\"45\" aria-valuemin=\"0\" aria-valuemax=\"100\"><span class=\"sr-only\">Processing...</span></div></div></div>")
+     //var threadID = url.match(/.+#inbox\/(.+)/)[1];
+     var inbox = url.match(/.+#inbox\/(.+)/);
+     var search = url.match(/.+#search\/.+\/(.+)/);
+     var threadID;
+     
+     if (inbox) {
+     threadID = inbox[1];
+     }
+     else if (search) {
+     threadID = search[1];
+     }
+     else {
+     renderError("Select a Gmail email thread.")
+     return;
+     }
 
-    if (inbox) {
-      threadID = inbox[1];
-    }
-    else if (search) {
-      threadID = search[1];
-    }
-    else {
-      renderContent("Select a Gmail email thread.")
-      return;
-    }
 
     interactiveSignIn(function(token) {
       sendSpinRequest(threadID, token, function(response) {
@@ -205,23 +233,34 @@ document.addEventListener('DOMContentLoaded', function() {
             "edges": edges
         };
 
+      if($('#dialoganal').prop('checked')) {
+
+      renderContent(data.html);
+      var cb1 = document.getElementById("request-cb");
+      cb1.addEventListener("click", function() {handleCheckbox(cb1)});
+      var cb2 = document.getElementById("conventional-cb");
+      cb2.addEventListener("click", function() {handleCheckbox(cb2)});
+      var cb3 = document.getElementById("inform-cb");
+      cb3.addEventListener("click", function() {handleCheckbox(cb3)});
+     }
+      else {
+      renderContent("");
+      }
+                      
+      if($('#powerpred').prop('checked')) {
+
+        document.getElementById('power-graph').innerHTML = "<canvas id=\"springydemo\" width=\"700px\"/>";
+
         jQuery(function(){
           var graph = new Springy.Graph();
           graph.loadJSON(graphJSON);
-          renderContent(data.html);
 
           var springy = jQuery('#springydemo').springy({
             graph: graph
           });
         });
-
-        var cb1 = document.getElementById("request-cb");
-        cb1.addEventListener("click", function() {handleCheckbox(cb1)});       
-        var cb2 = document.getElementById("conventional-cb");
-        cb2.addEventListener("click", function() {handleCheckbox(cb2)});       
-        var cb3 = document.getElementById("inform-cb");
-        cb3.addEventListener("click", function() {handleCheckbox(cb3)});
-
+      }
+        
 
       });
     });
@@ -231,5 +270,85 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }, function(errorMessage) {
       renderContent('Cannot display image. ' + errorMessage + '\n' + threadID);
-  });
-});
+  });                    
+}
+
+//document.addEventListener('DOMContentLoaded', function() {
+//  getCurrentTabUrl(function(url) {
+//
+//    //var threadID = url.match(/.+#inbox\/(.+)/)[1];
+//    var inbox = url.match(/.+#inbox\/(.+)/);
+//    var search = url.match(/.+#search\/.+\/(.+)/);
+//    var threadID;
+//
+//    if (inbox) {
+//      threadID = inbox[1];
+//    }
+//    else if (search) {
+//      threadID = search[1];
+//    }
+//    else {
+//      renderContent("Select a Gmail email thread.")
+//      return;
+//    }
+//
+//    interactiveSignIn(function(token) {
+//      sendSpinRequest(threadID, token, function(response) {
+//        //renderStatus('Message ID: ' + msgID + '\n' +
+//        //    'Google image search result: ' + msgID);
+//        //var imageResult = document.getElementById('image-result');
+//        //console.log(response);
+//        var data = JSON.parse(response);
+//        var edges = JSON.parse(data.graph);
+//        console.log(edges);
+//
+//        var l = edges.length;
+//
+//        var names = [];
+//        for (var i = 0; i < l; i++) {
+//          var pair = edges[i];
+//          names.push(pair[0]);
+//          names.push(pair[1]);
+//        }
+//
+//        var uniqueNames = [];
+//        $.each(names, function(i, el){
+//          if ($.inArray(el, uniqueNames) === -1) 
+//            uniqueNames.push(el);
+//        });
+//        console.log(uniqueNames);
+//        console.log(edges);
+//        var graphJSON = {
+//            "nodes": uniqueNames,
+//            "edges": edges
+//        };
+//
+//      renderContent(data.html);
+//      var cb1 = document.getElementById("request-cb");
+//      cb1.addEventListener("click", function() {handleCheckbox(cb1)});
+//      var cb2 = document.getElementById("conventional-cb");
+//      cb2.addEventListener("click", function() {handleCheckbox(cb2)});
+//      var cb3 = document.getElementById("inform-cb");
+//      cb3.addEventListener("click", function() {handleCheckbox(cb3)});
+//
+//        jQuery(function(){
+//          var graph = new Springy.Graph();
+//          graph.loadJSON(graphJSON);
+//
+//          var springy = jQuery('#springydemo').springy({
+//            graph: graph
+//          });
+//        });
+//
+//        
+//
+//      });
+//    });
+//    //renderStatus('Performing Google Image search for ' + msgID);
+//
+//
+//
+//    }, function(errorMessage) {
+//      renderContent('Cannot display image. ' + errorMessage + '\n' + threadID);
+//  });
+//});

@@ -20,7 +20,7 @@ public class OutputFormatter {
 
   public static String formatOutput(File f, HashMap<String, String> thread_info) {
     StringBuilder sb_html = new StringBuilder();
-    sb_html.append("<div class=\"power-graph\"><center><canvas id=\"springydemo\" width=\"650px\"/></center></div>");
+//    sb_html.append("<div id=\"power-graph\" class=\"power-graph\"><center><canvas id=\"springydemo\" width=\"650px\"/></center></div>");
     sb_html.append("<div class=\"container-fluid\"><div class=\"row\"><div class=\"col-xs-4\">");
     sb_html.append("<div class=\"checkbox\"><center><label><input id=\"request-cb\" type=\"checkbox\" value=\".request\" checked>Request</label></center>");
     sb_html.append("</div></div><div class=\"col-xs-4\"><div class=\"checkbox\">");

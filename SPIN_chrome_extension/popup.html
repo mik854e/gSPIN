@@ -18,10 +18,23 @@
   <body>
 
     <div class="page-header">
-      <h2><center>gSPIN Analysis</center></h2>
+      <h3><center>gSPIN Analysis</center></h3>
     </div>
 
-<!-- 
+    <div class="options">
+    <div align="center">
+        <!--            <input type="checkbox" name="datagging" id="datagging" checked> <label for="datagging">Dialog Act Tagging</label>-->
+        <!--            <input type="checkbox" name="odptagging" id="odptagging" checked> <label for="odptagging">ODP Tagging</label>-->
+        <input type="checkbox" name="dialoganal" id="dialoganal" checked> <label for="dialoganal">Dialog Analysis</label>
+            <input type="checkbox" name="powerpred" id="powerpred"> <label for="powerpred">Power Prediction</label>
+                </div>
+    <div align="center">
+        <button>Analyze using gSPIN</button>
+        <!--        <button type="submit" value="Analyze using gSPIN">-->
+    </div><hr>
+
+
+<!--
     <div class="power-graph">
       <center><img src="graph_png.png" style="width:20%"></center>
     </div>
@@ -31,16 +44,20 @@
     </span>
 -->
 
+<div id="power-graph" class="power-graph">
+    <!--      <canvas id="springydemo" width="700px"/>-->
+</div>
+
     <div id="content">
-      <div class="loading">
-      <div class="progress">
+<!--      <div class="loading">-->
+<!--      <div class="progress">-->
         <!--<center>-->
-          <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
-            <span class="sr-only">Processing...</span>
-          </div>
-      </div>
+<!--          <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">-->
+<!--            <span class="sr-only">Processing...</span>-->
+<!--          </div>-->
+<!--      </div>-->
         <!--</center>-->
-      </div>
+<!--      </div>-->
     </div>
 
     <script src="bootstrap-3.3.4/js/bootstrap.min.js"></script>
