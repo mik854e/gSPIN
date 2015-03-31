@@ -4,10 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.*;
 import java.util.Date;
-import java.util.Properties;
-
-import java.io.IOException;
-import java.io.ByteArrayInputStream;
 
 import java.text.SimpleDateFormat;
 
@@ -19,12 +15,6 @@ import com.google.api.services.gmail.model.MessagePartHeader;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
 
 public class GmailFormatter {
 
