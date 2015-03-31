@@ -1,0 +1,36 @@
+body {
+  width: 700px;
+}
+
+mark {
+  background-color: orange;
+  color: black;
+}
+
+.progress-bar {
+  width: 40%;
+  height: 40px;
+}
+
+.loading {
+  padding: 20px 100px 0px 100px;
+}
+
+.conventional {
+  color: blue;
+}
+
+.request {
+  color: red;
+}
+.inform {
+  color: brown;
+}
+.power-graph {
+  align: center; 
+  margin: 0px 0px 20px 0px;
+}
+.panel {
+  margin-bottom: 0px;
+}
+
