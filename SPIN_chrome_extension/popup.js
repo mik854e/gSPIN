@@ -168,7 +168,42 @@ document.addEventListener('DOMContentLoaded', function() {
         //renderStatus('Message ID: ' + msgID + '\n' +
         //    'Google image search result: ' + msgID);
         //var imageResult = document.getElementById('image-result');
-        renderContent(response);
+        //console.log(response);
+        var data = JSON.parse(response);
+        var edges = JSON.parse(data.graph);
+        console.log(edges);
+
+        var l = edges.length;
+
+        var names = [];
+        for (var i = 0; i < l; i++) {
+          var pair = edges[i];
+          names.push(pair[0]);
+          names.push(pair[1]);
+        }
+
+        var uniqueNames = [];
+        $.each(names, function(i, el){
+          if ($.inArray(el, uniqueNames) === -1) 
+            uniqueNames.push(el);
+        });
+        console.log(uniqueNames);
+        console.log(edges);
+        var graphJSON = {
+            "nodes": uniqueNames,
+            "edges": edges
+        };
+
+        jQuery(function(){
+          var graph = new Springy.Graph();
+          graph.loadJSON(graphJSON);
+
+          var springy = jQuery('#springydemo').springy({
+            graph: graph
+          });
+        });
+
+        renderContent(data.html);
       });
     });
     //renderStatus('Performing Google Image search for ' + msgID);

@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 public class GmailFormatter {
 
-	public static String formatThread(Thread thread) {
+	public static String formatThread(Thread thread, HashMap<String, String> thread_info) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<thread>");
 		sb.append(System.lineSeparator());
@@ -28,8 +28,6 @@ public class GmailFormatter {
 
 		ArrayList<Message> msgs = (ArrayList<Message>) thread.getMessages();
 
-		HashMap<String, String> thread_info = getThreadInfo(msgs);
-
 		for (Message m : msgs) {
 			formatMessage(m, sb, thread_info);
 		}
@@ -38,7 +36,8 @@ public class GmailFormatter {
 		return sb.toString();
 	}
 
-	private static HashMap<String, String> getThreadInfo(ArrayList<Message> msgs) {
+	public static HashMap<String, String> getThreadInfo(Thread thread) {
+		ArrayList<Message> msgs = (ArrayList<Message>) thread.getMessages();
 		HashMap<String, String> thread_info = new HashMap<String, String>();
 
 		for (Message m : msgs) {
@@ -46,7 +45,7 @@ public class GmailFormatter {
 			ArrayList<MessagePartHeader> headers = (ArrayList<MessagePartHeader>) mp.getHeaders();
 
 			// Get a map from email addresses to names.
-			Pattern p = Pattern.compile("[\"]*(.+)[\"]* <(.+@.+)>");
+			Pattern p = Pattern.compile("\"?([A-Za-z0-9.@ ]+)\"? <(.+@.+)>");
 			Matcher mat;
 			for (MessagePartHeader mph : headers) {
 				if (mph.getName().equals("To") || mph.getName().equals("From") || mph.getName().equals("CC")) {
@@ -225,7 +224,7 @@ System.out.println("MSG_ID: "+msg_id);
 			}
 		}
 
-		Pattern p = Pattern.compile("(.+) <(.+@.+)>");
+		Pattern p = Pattern.compile("\"?([A-Za-z0-9.@ ]+)\"? <(.+@.+)>");
 		Matcher mat;
         
 		for (MessagePartHeader mph : headers) {
@@ -296,7 +295,7 @@ System.out.println(thread_info.toString());
 
         // VP_HIST (03/29): a silly regex to match the history line
         //		sb.append(content);
-        Pattern historypattern = Pattern.compile("On (Mon|Tue|Wed|Thu|Fri|Sat|Sun), (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d+, \\d+ at \\d+:\\d+ (AM|PM), .*" );
+        Pattern historypattern = Pattern.compile("On .+ wrote:");
         if (content != null) { // In case of forwarded messages, sometimes content is "null" and this end up showing "NULL" in the output with a conventional tag placed there. Thsi if-condition fixes it, but maybe we should find a cleaner way to handle that.
             for (String line : content.split("\n")) {
                 Matcher historymatcher = historypattern.matcher(line);

@@ -136,7 +136,7 @@ class MyHandler implements HttpHandler {
     String requestMethod = exchange.getRequestMethod();
     if (requestMethod.equalsIgnoreCase("POST")) {
       Headers responseHeaders = exchange.getResponseHeaders();
-      responseHeaders.set("Content-Type", "text/plain");
+      responseHeaders.set("Content-Type", "application/json");//"text/plain");
       responseHeaders.set("Access-Control-Allow-Origin", "*");
 
       exchange.sendResponseHeaders(200, 0);
@@ -152,11 +152,13 @@ class MyHandler implements HttpHandler {
       System.out.println(threadID);
 
       String file_name = "";
+      HashMap<String, String> thread_info = null;
       try {
         Gmail service = getGmailService(token);
         Thread thread = service.users().threads().get(USER, threadID).execute();
   //System.out.println(thread.toPrettyString());
-        String parsed_thread = GmailFormatter.formatThread(thread);
+        thread_info = GmailFormatter.getThreadInfo(thread);
+        String parsed_thread = GmailFormatter.formatThread(thread, thread_info);
         System.out.println(parsed_thread);
         file_name = writeInputToFile(parsed_thread);
       }
@@ -188,8 +190,8 @@ class MyHandler implements HttpHandler {
           File dir_out = new File("EndToEndSystem/SPIN_TrialOut");
 
           File output_file = new File(dir_out, proc_file_name);
-          String formatted_output = OutputFormatter.formatOutput(output_file);
-  System.out.println(formatted_output);
+          String formatted_output = OutputFormatter.formatOutput(output_file, thread_info);
+System.out.println(formatted_output);
 
           // Delete all files used by the analysis.
           File f = new File(file_name); f.delete();

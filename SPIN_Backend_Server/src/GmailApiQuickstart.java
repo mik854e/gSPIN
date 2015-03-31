@@ -72,7 +72,7 @@ public class GmailApiQuickstart {
     //List<Thread> threads = threadsResponse.getThreads();
 
     Thread thread = service.users().threads().get(USER, "14bd127d951e9be0").execute();
-    String output = GmailFormatter.formatThread(thread);
+    String output = "";//GmailFormatter.formatThread(thread);
     System.out.println(output);
     System.out.println("YESSSSSSSSS");
     //System.out.println(thread.toPrettyString());

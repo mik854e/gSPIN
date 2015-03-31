@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -10,11 +11,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonBuilderFactory;
 
 public class OutputFormatter {
 
-  public static String formatOutput(File f) {
-    StringBuilder sb = new StringBuilder();
+  public static String formatOutput(File f, HashMap<String, String> thread_info) {
+    StringBuilder sb_html = new StringBuilder();
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder db = dbf.newDocumentBuilder();
@@ -26,10 +31,33 @@ public class OutputFormatter {
         for (int i = 0 ; i < nl.getLength(); i++) {
           Element msg = (Element)nl.item(i);
           Message m = getMessage(msg);
-          sb.append(formatMessage(m));
+          sb_html.append(formatMessage(m));
         }
       }
-      return sb.toString();
+
+      StringBuilder sb_power = new StringBuilder();
+      sb_power.append("[");
+      nl = doc.getElementsByTagName("powerannotations");
+      if (nl != null && nl.getLength() > 0) {
+        Node node = (Node) nl.item(0);
+        nl = node.getChildNodes(); //getElementsbyTagName("powerannotation");
+        if (nl != null && nl.getLength() > 0) {
+          for (int i = 0 ; i < nl.getLength(); i++) {
+            node = nl.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+              Element pa = (Element)nl.item(i);
+              PowerAnnotation power_annotation = getPowerAnnotation(pa, thread_info);
+              sb_power.append(formatPowerAnnotation(power_annotation));
+            }
+          }
+        }
+      }
+      sb_power.deleteCharAt(sb_power.length()-1);
+      sb_power.append("]");
+      JsonBuilderFactory factory = Json.createBuilderFactory(null);
+      JsonObject json = factory.createObjectBuilder().add("html", sb_html.toString()).add("graph", sb_power.toString()).build();
+
+      return json.toString();
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -90,55 +118,12 @@ public class OutputFormatter {
     sb.append("</div></div>");//sb.append("<br><br></div></div>");
 
     return sb.toString();
-    /*
-    sb.append("Subject: " + m.subject);
-    sb.append("<br>");
-    sb.append("From: " + m.from.name);
-    sb.append("<br>");
-    String to = "To: ";
-    for (Person p : m.to) {
-      to += p.name + ", ";
-    }
-    sb.append(to);
-    sb.append("<br>");
-    sb.append("<br>");
+  }
 
-    for (DFU dfu : m.content) {
-      
-      String s = "[" + dfu.DA + "] " + dfu.text;
-      if (dfu.ODP) {
-        s += " (ODP)";
-      }
-      
-      /*
-      String color = null;
-      String s = null;
-      if (dfu.DA.equals("Request-Information"))
-        color = "blue";
-      else if (dfu.DA.contains("Request"))
-        color = "red";
-      if (color != null)
-        s = "<font color=\"" + color + "\">" + dfu.text + "</font>";
-      else
-        s = dfu.text;
-
-      if (dfu.ODP) {
-        sb.append("<b>");
-        sb.append(s);
-        sb.append("</b>");
-      }
-      else
-        sb.append(s);
-      
-      
-    sb.append(s);
-    sb.append("<br>");
-    }
-
-    sb.append("<br>");
-    sb.append("<br>");
-
-    */
+  private static String formatPowerAnnotation(PowerAnnotation pa) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[\""+pa.superior+"\",\""+pa.subordinate+"\"],");
+    return sb.toString();
   }
 
   private static String getDAClass(String da) {
@@ -231,6 +216,17 @@ public class OutputFormatter {
   private static DFU getFiller(Element dfu) {
     String text = dfu.getTextContent();
     return new DFU("FILLER", false, text);
+  }
+
+  private static PowerAnnotation getPowerAnnotation(Element pa, HashMap<String, String> thread_info) {
+    String type = pa .getAttribute("type");
+    String person1 = pa.getAttribute("person1");
+    String person2 = pa.getAttribute("person2");
+
+    String superior = thread_info.get(person1);
+    String subordinate = thread_info.get(person2);
+
+    return new PowerAnnotation(type, superior, subordinate);
   }
 
   private static String getTextValue(Element ele, String tagName) {

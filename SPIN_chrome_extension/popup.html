@@ -5,49 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <script src="jquery.min.js"></script>
+    <script src="springy/springy.js"></script>
+    <script src="springy/springyui.js"></script>
     <script src="popup.js"></script>
 
     <!-- Bootstrap -->
     <link href="bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <style>  
-
-      body {
-        width: 700px;
-      }
-
-      mark {
-        background-color: orange;
-        color: black;
-      }
-
-      .progress-bar {
-        width: 40%;
-        height: 40px;
-      }
-
-      .loading {
-        padding: 20px 100px 0px 100px;
-      }
-
-      .conventional {
-        color: blue;
-      }
-
-      .request {
-        color: red;
-      }
-      .inform {
-        color: brown;
-      }
-      .power-graph {
-        align: center; 
-        margin: 0px 0px 20px 0px;
-      }
-      .panel {
-        margin-bottom: 0px;
-      }
-
-    </style>
+    <link href="style.css" rel="stylesheet">
 
   </head>
   <body>
@@ -65,6 +30,9 @@
       <input type="checkbox">
     </span>
 -->
+    <div class="power-graph">
+      <canvas id="springydemo" width="700px"/>
+    </div>
 
     <div id="content">
       <div class="loading">
@@ -78,9 +46,6 @@
       </div>
     </div>
 
-
-      
-    <script src="jquery.min.js"></script>
     <script src="bootstrap-3.3.4/js/bootstrap.min.js"></script>
   </body>
   
