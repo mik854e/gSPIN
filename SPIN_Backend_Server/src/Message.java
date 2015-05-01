@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonBuilderFactory;
+
 class Message {
 
 	public int depth;
@@ -25,5 +30,26 @@ class Message {
 		this.to = to;
 		this.cc = cc;
 		this.content = content;
+	}
+
+	public String toString() {
+		StringBuilder sb_to = new StringBuilder();
+		StringBuilder sb_body = new StringBuilder();
+
+		for (Person p : this.to) {
+      		sb_to.append(p.name+", ");
+    	}
+    	for (Person p : this.cc) {
+      		sb_to.append(p.name+", ");
+    	}
+
+    	for (DFU dfu : this.content) {
+    		sb_body.append(dfu.toString());
+    	}
+
+		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+      	JsonObject json = factory.createObjectBuilder().add("subject", subject).add("from", from.name).add("to", sb_to.toString()).add("body", sb_body.toString()).build();
+		
+		return json.toString();
 	}
 }

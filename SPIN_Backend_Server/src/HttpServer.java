@@ -156,10 +156,10 @@ class MyHandler implements HttpHandler {
       try {
         Gmail service = getGmailService(token);
         Thread thread = service.users().threads().get(USER, threadID).execute();
-  //System.out.println(thread.toPrettyString());
+//System.out.println(thread.toPrettyString());
         thread_info = GmailFormatter.getThreadInfo(thread);
         String parsed_thread = GmailFormatter.formatThread(thread, thread_info);
-        System.out.println(parsed_thread);
+//System.out.println(parsed_thread);
         file_name = writeInputToFile(parsed_thread);
       }
       catch (Exception e) {
@@ -182,34 +182,31 @@ class MyHandler implements HttpHandler {
         rt = Runtime.getRuntime();
         //String proc_file_name = file_name + ".tagged.processed";
         String proc_file_name = file_name + ".tagged";
-/*
-          pr = rt.exec("perl DA_fix.pl SPIN_TrialOut/" + file_name + ".tagged SPIN_TrialOut/" + proc_file_name, null, dir);
-          exit_val = pr.waitFor();
-*/   
-          // Process output XML and convert into response for frontend.
-          File dir_out = new File("EndToEndSystem/SPIN_TrialOut");
 
-          File output_file = new File(dir_out, proc_file_name);
-          String formatted_output = OutputFormatter.formatOutput(output_file, thread_info);
+        // Process output XML and convert into response for frontend.
+        File dir_out = new File("EndToEndSystem/SPIN_TrialOut");
+
+        File output_file = new File(dir_out, proc_file_name);
+        String formatted_output = OutputFormatter.formatOutput(output_file, thread_info);
 System.out.println(formatted_output);
 
-          // Delete all files used by the analysis.
-          File f = new File(file_name); f.delete();
-          
-          //VP_INDEL 03/29: deletes the input files
-          File input_file = new File("EndToEndSystem/SPIN_TrialIn", file_name);
-          input_file.delete();
-          
-         // output_file.delete();
-          //output_file = new File(dir_out, file_name + ".tagged");
-         // output_file = new File(dir_out, file_name + ".xmi");
-         // output_file.delete();
-          //VP_INDEL ends
-          
-          // Send response.
-          OutputStream responseBody = exchange.getResponseBody();
-          responseBody.write(formatted_output.getBytes());
-          responseBody.close();
+        // Delete all files used by the analysis.
+        File f = new File(file_name); f.delete();
+        
+        //VP_INDEL 03/29: deletes the input files
+        File input_file = new File("EndToEndSystem/SPIN_TrialIn", file_name);
+        input_file.delete();
+        
+       // output_file.delete();
+        //output_file = new File(dir_out, file_name + ".tagged");
+       // output_file = new File(dir_out, file_name + ".xmi");
+       // output_file.delete();
+        //VP_INDEL ends
+        
+        // Send response.
+        OutputStream responseBody = exchange.getResponseBody();
+        responseBody.write(formatted_output.getBytes());
+        responseBody.close();
       }
 
       catch (Exception e) {

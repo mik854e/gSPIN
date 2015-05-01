@@ -1,0 +1,67 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-4">
+			<div class="checkbox">
+			<label><input id="request-cb" type="checkbox" value=".request" checked>Request</label>
+			</div>
+		</div>
+		<div class="col-xs-4">
+			<div class="checkbox">
+				<label><input id="conventional-cb" type="checkbox" value=".conventional" checked>Conventional</label>
+			</div>
+		</div>
+		<div class="col-xs-4">
+			<div class="checkbox">
+			<label><input id="inform-cb" type="checkbox" value=".inform" checked>Inform</label>
+			</div>
+		</div>
+	</div>
+</div>
+
+{{#emails}}
+{{#email}}
+<div class="panel panel-default">
+
+	<div class="panel-heading">
+		<h3 class="panel-title">{subject}</h3>
+	</div>
+
+	<div class="panel-body">
+		<b>{from}</b>
+		<br>{to}<br><br>
+
+		<table>
+			<col style="width:150px">
+			{{body}}
+		</table>
+	</div>
+
+</div>
+
+<tr>
+			<td><div class="conventional">Conventional</div></td>
+			<td>Hey Derek,</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td>
+			</tr>
+			<tr>
+			<td><div class="request">Request_Action</div></td>
+			<td><mark>Can you contact Pistahan and prepare the catering order?</mark> (ODP)</td>
+			</tr>
+			<tr>
+			<td><div class="inform">Inform</div></td>
+			<td>We're looking to \nvary up the food a bit.</td>
+			</tr>
+			<tr>
+			<td><div class="request">Request_Information</div></td>
+			<td><mark>Can you get us an up-to-date menu with catering \nprices?</mark> (ODP)</td>
+			</tr>
+			<tr>
+			<td>&nbsp;</td><td>&nbsp;</td></tr>
+			<tr>
+			<td><div class="request">Request_Action</div></td>
+			<td><mark>Please do this by Wednesday.</mark> (ODP)</td>
+			</tr><tr><td>&nbsp;</td><td>&nbsp;</td>
+			</tr>
+			<tr>
+			<td><div class="conventional">Conventional</div></td>
+			<td>Michael</td>
+</tr>

@@ -19,30 +19,35 @@ import javax.json.JsonBuilderFactory;
 public class OutputFormatter {
 
   public static String formatOutput(File f, HashMap<String, String> thread_info) {
-    StringBuilder sb_html = new StringBuilder();
-//    sb_html.append("<div id=\"power-graph\" class=\"power-graph\"><center><canvas id=\"springydemo\" width=\"650px\"/></center></div>");
+    StringBuilder sb_emails = new StringBuilder();
+    StringBuilder sb_power = new StringBuilder();
+    /*
+    sb_html.append("<div id=\"power-graph\" class=\"power-graph\"><center><canvas id=\"springydemo\" width=\"650px\"/></center></div>");
     sb_html.append("<div class=\"container-fluid\"><div class=\"row\"><div class=\"col-xs-4\">");
     sb_html.append("<div class=\"checkbox\"><center><label><input id=\"request-cb\" type=\"checkbox\" value=\".request\" checked>Request</label></center>");
     sb_html.append("</div></div><div class=\"col-xs-4\"><div class=\"checkbox\">");
     sb_html.append("<center><label><input id=\"conventional-cb\" type=\"checkbox\" value=\".conventional\" checked>Conventional</label></center></div>");
     sb_html.append("</div><div class=\"col-xs-4\"><div class=\"checkbox\"><center><label><input id=\"inform-cb\" type=\"checkbox\" value=\".inform\" checked>Inform</label></center>");
     sb_html.append("</div></div></div></div>");
+    */
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder db = dbf.newDocumentBuilder();
       Document dom = db.parse(f);
       Element doc = dom.getDocumentElement();
 
+      sb_emails.append("[");
       NodeList nl = doc.getElementsByTagName("message");
       if (nl != null && nl.getLength() > 0) {
         for (int i = 0 ; i < nl.getLength(); i++) {
           Element msg = (Element)nl.item(i);
           Message m = getMessage(msg);
-          sb_html.append(formatMessage(m));
+          sb_emails.append(m.toString() + ",");
         }
+        sb_emails.deleteCharAt(sb_emails.length()-1);
       }
+      sb_emails.append("]");
 
-      StringBuilder sb_power = new StringBuilder();
       sb_power.append("[");
       nl = doc.getElementsByTagName("powerannotations");
       if (nl != null && nl.getLength() > 0) {
@@ -62,7 +67,7 @@ public class OutputFormatter {
       sb_power.deleteCharAt(sb_power.length()-1);
       sb_power.append("]");
       JsonBuilderFactory factory = Json.createBuilderFactory(null);
-      JsonObject json = factory.createObjectBuilder().add("html", sb_html.toString()).add("graph", sb_power.toString()).build();
+      JsonObject json = factory.createObjectBuilder().add("emails", sb_emails.toString()).add("graph", sb_power.toString()).build();
 
       return json.toString();
     }
@@ -103,9 +108,9 @@ public class OutputFormatter {
       }
       else {
       //sb.append("<font color=\""+color+"\">"+dfu.DA+": </font>");
-        String da_class = getDAClass(dfu.da);
+        //String da_class = getDAClass(dfu.da);
         sb.append("<tr>");
-        sb.append("<td><div class=\""+da_class+"\">"+dfu.da+"</div></td>");
+        //sb.append("<td><div class=\""+da_class+"\">"+dfu.da+"</div></td>");
 
         sb.append("<td>");
 
@@ -131,20 +136,6 @@ public class OutputFormatter {
     StringBuilder sb = new StringBuilder();
     sb.append("[\""+pa.superior+"\",\""+pa.subordinate+"\"],");
     return sb.toString();
-  }
-
-  private static String getDAClass(String da) {
-    String da_class;
-    if (da.contains("Request"))
-      da_class = "request";
-    else if (da.equals("Conventional"))
-      da_class = "conventional";
-    else if (da.equals("Inform")) 
-      da_class = "inform";
-    else 
-      da_class = "other";
-
-    return da_class;
   }
 
   private static Message getMessage(Element msg) {
