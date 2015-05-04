@@ -32,35 +32,59 @@
 			</div>
 		</div>
 
-		<div class="power-graph">
+		<div class="power-graph" hidden>
 			<center>
-				<canvas id="springydemo" width="650px"/>
+				<canvas id="springydemo" />
 			</center>
 		</div>
 
-		<div id="email-panel">
-			<script id="emails" type="text/template"/>
-				{{#emails}}
-				<div class="panel panel-default">
+		<div id="email-panel" hidden>
 
-					<div class="panel-heading">
-						<h3 class="panel-title">{{subject}}</h3>
-					</div>
+			<div class="row" align="center">
+    		<div class="col-xs-4">
+    			<div class="checkbox">
+    				<label><input id="request-cb" type="checkbox" value="tr.request" checked>Request</label>
+    			</div>
+    		</div>
 
-					<div class="panel-body">
-						<b>{{from}}</b>
-						<br>{{to}}<br><br>
+    		<div class="col-xs-4">
+    			<div class="checkbox">
+    				<label><input id="conventional-cb" type="checkbox" value="tr.conventional" checked>Conventional</label>
+    			</div>
+   	 		</div>
 
-						<table>
-							<col style="width:150px">
-							{{{body}}}
-						</table>
-					</div>
-				</div>
-				{{/emails}}
-			</script>
+   	 		<div class="col-xs-4">
+   	 			<div class="checkbox">
+   	 				<label><input id="inform-cb" type="checkbox" value="tr.inform" checked>Inform</label>
+   				</div>
+   			</div>
+	   	</div>
+
+	   	<div class="emails" />
 		</div>
     
+
+    <script id="emails" type="text/template"/>
+			{{#emails}}
+			<div class="panel panel-default">
+
+				<div class="panel-heading">
+					<h3 class="panel-title">{{subject}}</h3>
+				</div>
+
+				<div class="panel-body">
+					<b>{{from}}</b>
+					<br>to {{to}}<br><br>
+
+					<table>
+						<col class="email-body">
+						{{{body}}}
+					</table>
+				</div>
+			</div>
+			{{/emails}}
+		</script>
+
     <script src="../bootstrap-3.3.4/js/bootstrap.min.js"></script>
   </body>
   

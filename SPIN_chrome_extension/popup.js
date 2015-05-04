@@ -39,87 +39,9 @@ function clickHandler() {
       return;
     }
 
-    var msg = {threadID: threadID};
+    var msg = {threadID: threadID,
+               isDialog: $('#dialoganal').prop('checked'),
+               isGraph: $('#powerpred').prop('checked')};
     chrome.runtime.sendMessage(msg);
   });  
 }              
-
-//document.addEventListener('DOMContentLoaded', function() {
-//  getCurrentTabUrl(function(url) {
-//
-//    //var threadID = url.match(/.+#inbox\/(.+)/)[1];
-//    var inbox = url.match(/.+#inbox\/(.+)/);
-//    var search = url.match(/.+#search\/.+\/(.+)/);
-//    var threadID;
-//
-//    if (inbox) {
-//      threadID = inbox[1];
-//    }
-//    else if (search) {
-//      threadID = search[1];
-//    }
-//    else {
-//      renderContent("Select a Gmail email thread.")
-//      return;
-//    }
-//
-//    interactiveSignIn(function(token) {
-//      sendSpinRequest(threadID, token, function(response) {
-//        //renderStatus('Message ID: ' + msgID + '\n' +
-//        //    'Google image search result: ' + msgID);
-//        //var imageResult = document.getElementById('image-result');
-//        //console.log(response);
-//        var data = JSON.parse(response);
-//        var edges = JSON.parse(data.graph);
-//        console.log(edges);
-//
-//        var l = edges.length;
-//
-//        var names = [];
-//        for (var i = 0; i < l; i++) {
-//          var pair = edges[i];
-//          names.push(pair[0]);
-//          names.push(pair[1]);
-//        }
-//
-//        var uniqueNames = [];
-//        $.each(names, function(i, el){
-//          if ($.inArray(el, uniqueNames) === -1) 
-//            uniqueNames.push(el);
-//        });
-//        console.log(uniqueNames);
-//        console.log(edges);
-//        var graphJSON = {
-//            "nodes": uniqueNames,
-//            "edges": edges
-//        };
-//
-//      renderContent(data.html);
-//      var cb1 = document.getElementById("request-cb");
-//      cb1.addEventListener("click", function() {handleCheckbox(cb1)});
-//      var cb2 = document.getElementById("conventional-cb");
-//      cb2.addEventListener("click", function() {handleCheckbox(cb2)});
-//      var cb3 = document.getElementById("inform-cb");
-//      cb3.addEventListener("click", function() {handleCheckbox(cb3)});
-//
-//        jQuery(function(){
-//          var graph = new Springy.Graph();
-//          graph.loadJSON(graphJSON);
-//
-//          var springy = jQuery('#springydemo').springy({
-//            graph: graph
-//          });
-//        });
-//
-//        
-//
-//      });
-//    });
-//    //renderStatus('Performing Google Image search for ' + msgID);
-//
-//
-//
-//    }, function(errorMessage) {
-//      renderContent('Cannot display image. ' + errorMessage + '\n' + threadID);
-//  });
-//});

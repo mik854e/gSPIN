@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="jquery.min.js"></script>
-    <script src="springy/springy.js"></script>
-    <script src="springy/springyui.js"></script>
     <script src="popup.js"></script>
 
     <!-- Bootstrap -->
@@ -15,40 +13,33 @@
     <link href="style.css" rel="stylesheet">
 
   </head>
-  <body>
+  <body id="popup">
+    <div class="container">
 
-    <div class="page-header">
-      <h4><center>gSPIN Analysis</center></h4>
+      <h4 class="popup-title"><center>gSPIN Analysis</center></h4>
+
+      <div class="options">
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="dialoganal" id="dialoganal" checked>Dialog Analysis
+            </label>
+          </div>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="powerpred" id="powerpred" checked>Power Prediction
+            </label>
+          </div>
+
+      </div>
+
+      <div align="center">
+        <button class="analyze">Perform Analysis</button>
+      </div>
+
     </div>
 
-    <div class="options">
-    <div align="center">
-        <!--            <input type="checkbox" name="datagging" id="datagging" checked> <label for="datagging">Dialog Act Tagging</label>-->
-        <!--            <input type="checkbox" name="odptagging" id="odptagging" checked> <label for="odptagging">ODP Tagging</label>-->
-        <input type="checkbox" name="dialoganal" id="dialoganal" checked> <label for="dialoganal">Dialog Analysis</label>
-            <input type="checkbox" name="powerpred" id="powerpred"> <label for="powerpred">Power Prediction</label>
-                </div>
-    <div align="center">
-        <button>Analyze using gSPIN</button>
-        <!--        <button type="submit" value="Analyze using gSPIN">-->
-    </div><hr>
-
-
-<!--
-    <div class="power-graph">
-      <center><img src="graph_png.png" style="width:20%"></center>
-    </div>
-
-    <span class="input-group-addon">
-      <input type="checkbox">
-    </span>
-
-    <div id="power-graph" class="power-graph">
-      <canvas id="springydemo" width="700px"/>
-    </div>
-
-    <div id="content"></div>
--->
     <script src="bootstrap-3.3.4/js/bootstrap.min.js"></script>
   </body>
   

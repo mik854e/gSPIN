@@ -33,7 +33,7 @@ class DFU {
     else {
     //sb.append("<font color=\""+color+"\">"+this.DA+": </font>");
       String da_class = getDAClass();
-      sb.append("<tr>");
+      sb.append("<tr class=\""+da_class+"\">");
       sb.append("<td><div class=\""+da_class+"\">"+this.da+"</div></td>");
 
       sb.append("<td>");
