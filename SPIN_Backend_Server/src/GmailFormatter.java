@@ -295,7 +295,7 @@ System.out.println(thread_info.toString());
 
         // VP_HIST (03/29): a silly regex to match the history line
         //		sb.append(content);
-        Pattern historypattern = Pattern.compile("On .+ wrote:");
+        Pattern historypattern = Pattern.compile("On ((Mon|Tue|Wed|Thu|Fri|Sat|Sun),)* (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)");
         if (content != null) { // In case of forwarded messages, sometimes content is "null" and this end up showing "NULL" in the output with a conventional tag placed there. Thsi if-condition fixes it, but maybe we should find a cleaner way to handle that.
             for (String line : content.split("\n")) {
                 Matcher historymatcher = historypattern.matcher(line);
