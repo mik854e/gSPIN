@@ -50,7 +50,7 @@ public class GmailFormatter {
 			for (MessagePartHeader mph : headers) {
 				if (mph.getName().equals("To") || mph.getName().equals("From") || mph.getName().equals("CC")) {
 					String[] recipients = mph.getValue().split(", ");
-System.out.println(Arrays.toString(recipients));
+//System.out.println(Arrays.toString(recipients));
 					for (String recipient : recipients) {
 						mat = p.matcher(recipient);
 						if (mat.find()) {
@@ -71,7 +71,7 @@ System.out.println(Arrays.toString(recipients));
 			for (MessagePartHeader mph : headers) {
 				if (mph.getName().toLowerCase().equals("message-id")) {
 					msg_id = trimID(mph.getValue());
-System.out.println("GET MSGID: "+msg_id);
+//System.out.println("GET MSGID: "+msg_id);
 					break;
 				}
 			}
@@ -79,27 +79,27 @@ System.out.println("GET MSGID: "+msg_id);
 			for (MessagePartHeader mph : headers) {
 				if (mph.getName().equals("In-Reply-To")) {
 					parent_id = trimID(mph.getValue());
-System.out.println("GET PID: "+msg_id);
+//System.out.println("GET PID: "+msg_id);
 					break;
 				}
 			}
 
 			if (parent_id == null) {
-System.out.println("NO PID");
+//System.out.println("NO PID");
 				thread_info.put(msg_id, "0");
 			}
 			else {
-System.out.println("PID: "+parent_id);
+//System.out.println("PID: "+parent_id);
 				String depth_val = thread_info.get(parent_id);
 				if (depth_val == null)
 					depth_val = "0";
 				int depth = Integer.parseInt(depth_val) + 1;
 				thread_info.put(msg_id, depth+"");
 			}
-System.out.println(thread_info.toString());
+//System.out.println(thread_info.toString());
 		}
 
-System.out.println("THREAD INFO COMPLETE");
+//System.out.println("THREAD INFO COMPLETE");
 		return thread_info;
 	}
 
@@ -111,7 +111,7 @@ System.out.println("THREAD INFO COMPLETE");
 		if (mat.find()) {
 			return mat.group(1);
 		}
-System.out.println("TRIMID FAILED");
+//System.out.println("TRIMID FAILED");
 		return "";
 	}
 
@@ -153,14 +153,6 @@ System.out.println("TRIMID FAILED");
     }
 
 	public static void formatMessage(Message m, StringBuilder sb, HashMap<String, String> thread_info) {
-/*
-try{
-	System.out.println(m.toPrettyString());
-}
-catch (Exception e) {
-	System.out.println("Message print error");
-}
-*/
 		MessagePart mp = m.getPayload();
 		ArrayList<MessagePartHeader> headers = (ArrayList<MessagePartHeader>) mp.getHeaders();
 
@@ -179,7 +171,7 @@ catch (Exception e) {
 		}
 
 		depth = thread_info.get(msg_id);
-System.out.println("DEPTH: " + depth);
+//System.out.println("DEPTH: " + depth);
 
 
 		for (MessagePartHeader mph : headers) {
@@ -195,11 +187,11 @@ System.out.println("DEPTH: " + depth);
 			parent_id = "NULL";
 		}
 
-System.out.println("PARENT_ID: "+parent_id);
+//System.out.println("PARENT_ID: "+parent_id);
 		sb.append("<parent>"+parent_id+"</parent>");
 		sb.append(System.lineSeparator());
 
-System.out.println("MSG_ID: "+msg_id);
+//System.out.println("MSG_ID: "+msg_id);
 		sb.append("<message_id>"+msg_id+"</message_id>");
 		sb.append(System.lineSeparator());
 
@@ -251,12 +243,12 @@ System.out.println("MSG_ID: "+msg_id);
 						email = mat.group(2);
 					}
 					else {
-System.out.println("NAME NOT GIVEN: "+ recipient);
-System.out.println(thread_info.toString());
+//System.out.println("NAME NOT GIVEN: "+ recipient);
+//System.out.println(thread_info.toString());
 						email = recipient;
 						name = thread_info.get(email);
 					}
-System.out.println("NO FAILURE ON TO");
+//System.out.println("NO FAILURE ON TO");
 					sb.append("<to name=\""+name+"\" id=\""+email+"\" address=\""+email+"\" />");
 					sb.append(System.lineSeparator());
 				}
@@ -274,8 +266,8 @@ System.out.println("NO FAILURE ON TO");
 						email = mat.group(2);
 					}
 					else {
-System.out.println("NAME NOT GIVEN: "+ recipient);
-System.out.println(thread_info.toString());
+//System.out.println("NAME NOT GIVEN: "+ recipient);
+//System.out.println(thread_info.toString());
 						email = recipient;
 						name = thread_info.get(email);
 					}
@@ -288,19 +280,16 @@ System.out.println(thread_info.toString());
 		sb.append("<content>");
 		sb.append(System.lineSeparator());
 
-		String content = getMessageContent(m);
-
-//System.out.println(content);
-        
+		String content = getMessageContent(m);        
 
         // VP_HIST (03/29): a silly regex to match the history line
         //		sb.append(content);
-        Pattern historypattern = Pattern.compile("On ((Mon|Tue|Wed|Thu|Fri|Sat|Sun),)* (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)");
-        if (content != null) { // In case of forwarded messages, sometimes content is "null" and this end up showing "NULL" in the output with a conventional tag placed there. Thsi if-condition fixes it, but maybe we should find a cleaner way to handle that.
+        Pattern historypattern = Pattern.compile("On ((Mon|Tue|Wed|Thu|Fri|Sat|Sun|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), )*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)");
+        if (content != null) { 
             for (String line : content.split("\n")) {
                 Matcher historymatcher = historypattern.matcher(line);
                 if (historymatcher.find()) {
-                    System.out.println("Found history line =======: " + line);
+                    //System.out.println("Found history line =======: " + line);
                     break;
                 }
                 sb.append(line);
@@ -310,7 +299,7 @@ System.out.println(thread_info.toString());
         // End of VP_HIST
 
 
-System.out.println("SURVIVED HISTORY REGEX");
+//System.out.println("SURVIVED HISTORY REGEX");
 		sb.append(System.lineSeparator());
 		sb.append("</content>");
 		sb.append(System.lineSeparator());

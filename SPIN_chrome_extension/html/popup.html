@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="jquery.min.js"></script>
-    <script src="popup.js"></script>
+    <script src="../lib/jquery.min.js"></script>
+    <script src="../js/popup.js"></script>
 
     <!-- Bootstrap -->
-    <link href="bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
+    <link href="../bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 
   </head>
   <body id="popup">
@@ -18,7 +18,7 @@
 
       <h4 class="popup-title"><center>gSPIN Analysis</center></h4>
 
-      <div class="options">
+      <div id="options">
 
           <div class="checkbox">
             <label>
@@ -35,12 +35,16 @@
       </div>
 
       <div align="center">
-        <button class="analyze">Perform Analysis</button>
+        <button id="analyze">Perform Analysis</button>
       </div>
 
     </div>
 
-    <script src="bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <div id="popup-msg" hidden>
+      <center><p>Select a Gmail thread.</p></center>
+    </div>
+
+    <script src="../bootstrap-3.3.4/js/bootstrap.min.js"></script>
   </body>
   
 

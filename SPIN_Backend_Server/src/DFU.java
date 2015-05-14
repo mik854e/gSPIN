@@ -5,6 +5,12 @@ class DFU {
 	public String text;
 
 	public DFU(String da, boolean odp, String text) {
+    if (da.contains("Request")) {
+      if (da.contains("Information"))
+        da = "Request-Info";
+      else
+        da = "Request-Action";
+    }
 		this.da = da;
 		this.odp = odp;
 		this.text = text;
@@ -20,6 +26,9 @@ class DFU {
       da_class = "inform";
     else 
       da_class = "other";
+
+    if (this.odp) 
+      da_class = da_class + " odp";
 
     return da_class;
   }
@@ -37,10 +46,11 @@ class DFU {
       sb.append("<td><div class=\""+da_class+"\">"+this.da+"</div></td>");
 
       sb.append("<td>");
-
+      /*
       if (this.odp)
         sb.append("<mark>"+this.text+"</mark> (ODP)");
       else
+      */
         sb.append(this.text);
 
       sb.append("</td>");

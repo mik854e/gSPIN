@@ -2,22 +2,20 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import org.apache.commons.lang3.RandomStringUtils;
+import com.sun.net.httpserver.HttpServer;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.sun.net.httpserver.HttpHandler;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.io.FileUtils;
+
 import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -27,12 +25,11 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Thread;
 import com.google.api.services.gmail.model.ListThreadsResponse;
 
-public class HttpServer {
-  public static void main(String[] args) throws IOException {
+public class SpinServer {
+  public static void main(String[] args) throws Exception {
     int PORT = 8230;
     InetSocketAddress addr = new InetSocketAddress(PORT);
-    com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(addr, 0);
-
+    HttpServer server = HttpServer.create(addr, 0);
     server.createContext("/", new MyHandler());
     server.setExecutor(Executors.newCachedThreadPool());
     server.start();
@@ -50,7 +47,6 @@ class MyHandler implements HttpHandler {
     for (String param : raw_params) {
       String[] kv_pair = param.split("=");
       String key = kv_pair[0];
-      //String value = HttpUtility.UrlDecode(kv_pair[1]);
       String value = kv_pair[1];
 
       params.put(key, value);
@@ -65,6 +61,7 @@ class MyHandler implements HttpHandler {
     final String APP_NAME = "SPIN";
     // Path to the client_secret.json file downloaded from the Developer Console
     final String CLIENT_SECRET_PATH = "client_secret.json";
+
 
     GoogleClientSecrets clientSecrets;
 
@@ -87,9 +84,15 @@ class MyHandler implements HttpHandler {
   }
 
   public String writeInputToFile(String parsed_thread) {
-    String file_name = RandomStringUtils.randomAlphanumeric(8) + ".txt";
-    File dir_in = new File("EndToEndSystem/SPIN_TrialIn");
-    File input_file = new File(dir_in, file_name);
+    File dir_in = null;
+    String dir_name = null;
+    boolean is_success = false;
+    while (!is_success) {
+      dir_name = RandomStringUtils.randomAlphanumeric(8);
+      dir_in = new File("EndToEndSystem/SPIN_TrialIn/"+dir_name);
+      is_success = dir_in.mkdir();
+    }
+    File input_file = new File(dir_in, "input.txt");
     try {
       BufferedWriter input_writer = new BufferedWriter(new FileWriter(input_file));
       input_writer.write(parsed_thread);
@@ -97,10 +100,9 @@ class MyHandler implements HttpHandler {
     }
     catch (Exception e) {
       System.out.println("Error writing input file.");
-      file_name = "";
     }
     finally {
-      return file_name;
+      return dir_name;
     }
   }
 
@@ -147,61 +149,48 @@ class MyHandler implements HttpHandler {
       String threadID = params.get("threadID");
       String token = params.get("token"); //URLDecoder.decode(params.get("token"), "UTF-8");;
 
-      //token = token.replace("\n", "");
-      System.out.println(token);
-      System.out.println(threadID);
+      //System.out.println(token);
+      //System.out.println(threadID);
 
-      String file_name = "";
+      String dir_name = "";
       HashMap<String, String> thread_info = null;
       try {
         Gmail service = getGmailService(token);
         Thread thread = service.users().threads().get(USER, threadID).execute();
-//System.out.println(thread.toPrettyString());
+        //System.out.println(thread.toPrettyString());
         thread_info = GmailFormatter.getThreadInfo(thread);
         String parsed_thread = GmailFormatter.formatThread(thread, thread_info);
-//System.out.println(parsed_thread);
-        file_name = writeInputToFile(parsed_thread);
+        //System.out.println(parsed_thread);
+        dir_name = writeInputToFile(parsed_thread);
       }
       catch (Exception e) {
-        System.out.println("whhhyyyy erroooorr (gmail request)");
+        System.out.println("Error sending Gmail request or writing to file.");
         e.printStackTrace();
         return;
       }
 
-
-
       try {
         File dir = new File("EndToEndSystem");
+        String dirs = "SPIN_TrialIn/"+dir_name+" SPIN_TrialOut/"+dir_name;
         
         // Process input
         Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec("java -jar SPIN_PairORGHP_Runner_032215.jar Runner.properties SPIN_TrialIn SPIN_TrialOut", null, dir);
+        String proc = "java -jar SPIN_PairORGHP_Runner_032215.jar Runner.properties " + dirs;
+        Process pr = rt.exec(proc, null, dir);
         int exit_val = pr.waitFor();
 
-        // TEMP fix for output
-        rt = Runtime.getRuntime();
-        //String proc_file_name = file_name + ".tagged.processed";
-        String proc_file_name = file_name + ".tagged";
-
         // Process output XML and convert into response for frontend.
-        File dir_out = new File("EndToEndSystem/SPIN_TrialOut");
+        File dir_in = new File("EndToEndSystem/SPIN_TrialIn/"+dir_name);
+        File dir_out = new File("EndToEndSystem/SPIN_TrialOut/"+dir_name);
 
-        File output_file = new File(dir_out, proc_file_name);
+        // Create response from output of SPIN system.
+        File output_file = new File(dir_out, "input.txt.tagged");
         String formatted_output = OutputFormatter.formatOutput(output_file, thread_info);
-System.out.println(formatted_output);
+//System.out.println(formatted_output);
 
-        // Delete all files used by the analysis.
-        File f = new File(file_name); f.delete();
-        
-        //VP_INDEL 03/29: deletes the input files
-        File input_file = new File("EndToEndSystem/SPIN_TrialIn", file_name);
-        input_file.delete();
-        
-       // output_file.delete();
-        //output_file = new File(dir_out, file_name + ".tagged");
-       // output_file = new File(dir_out, file_name + ".xmi");
-       // output_file.delete();
-        //VP_INDEL ends
+        // Delete SPIN directories.
+        FileUtils.deleteDirectory(dir_in);
+        FileUtils.deleteDirectory(dir_out);
         
         // Send response.
         OutputStream responseBody = exchange.getResponseBody();

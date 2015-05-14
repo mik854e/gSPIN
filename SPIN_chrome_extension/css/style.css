@@ -7,7 +7,7 @@ mark {
   height: 40px;
 }
 .loading {
-  padding: 20px 100px 0px 100px;
+  padding: 50px 100px 20px 100px;
 }
 div.conventional {
   color: blue;
@@ -18,22 +18,13 @@ div.request {
 div.inform {
   color: brown;
 }
-.power-graph {
-  align: center; 
-  margin: 0px 0px 20px 0px;
-}
 .panel {
   margin-bottom: 0px;
 }
-.analyze {
-  margin: 15px 0px 15px 0px;
-}
+
 .popup-title {
   margin-top: 15px;
   margin-bottom: 15px;
-}
-.options {
-  margin-left: 25px;
 }
 .email-body {
   width: 150px;
@@ -41,10 +32,32 @@ div.inform {
 .page-header {
   margin: 40px 0px 0px;
 }
-#springydemo {
-  width: 100%;
+.odp {
+  font-weight: bold;
+  font-size: 15px;
+}
+#power-graph {
+  margin: 20px 0px 20px 0px;
+}
+#graph {
+  /*height: 480;
+  width: 640;
+  */
+}
+#options {
+  margin-left: 25px;
 }
 #popup {
   width: 200px;
+}
+#error {
+  margin-top: 40px;
+}
+#cb-bar {
+  margin-left: 0px;
+  margin-right: 0px; 
+}
+#analyze {
+  margin: 15px 0px 15px 0px;
 }
 

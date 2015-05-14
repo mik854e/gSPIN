@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('button').addEventListener('click', clickHandler);
+  isGmailThread();
 });
 
 function getCurrentTabUrl(callback) {
@@ -23,7 +24,7 @@ function clickHandler() {
         type: 'popup',
         //title: 'gSPIN',
         width: 700,
-        height: 700
+        height: 200
     }); 
         
     var inbox = url.match(/.+#inbox\/(.+)/);
@@ -35,13 +36,38 @@ function clickHandler() {
     else if (search)
       threadID = search[1];
     else {
-      renderContent("Select a Gmail email thread.");
+      renderContent("Select a Gmail thread.");
       return;
     }
 
     var msg = {threadID: threadID,
                isDialog: $('#dialoganal').prop('checked'),
                isGraph: $('#powerpred').prop('checked')};
+
     chrome.runtime.sendMessage(msg);
   });  
+}
+
+function isGmailThread() {
+  var threadID = null;
+
+  getCurrentTabUrl(function(url) {
+      var inbox = url.match(/.+#inbox\/(.+)/);
+      var search = url.match(/.+#search\/.+\/(.+)/);
+
+      if (inbox)
+        threadID = inbox[1];
+      else if (search)
+        threadID = search[1];
+      else {
+        renderContent();
+      }
+  });
+  return threadID;
 }              
+
+function renderContent() {
+  $('#options').hide();
+  $('#analyze').hide();
+  $('#popup-msg').show();
+}

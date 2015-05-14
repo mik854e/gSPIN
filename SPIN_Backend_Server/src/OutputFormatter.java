@@ -21,15 +21,7 @@ public class OutputFormatter {
   public static String formatOutput(File f, HashMap<String, String> thread_info) {
     StringBuilder sb_emails = new StringBuilder();
     StringBuilder sb_power = new StringBuilder();
-    /*
-    sb_html.append("<div id=\"power-graph\" class=\"power-graph\"><center><canvas id=\"springydemo\" width=\"650px\"/></center></div>");
-    sb_html.append("<div class=\"container-fluid\"><div class=\"row\"><div class=\"col-xs-4\">");
-    sb_html.append("<div class=\"checkbox\"><center><label><input id=\"request-cb\" type=\"checkbox\" value=\".request\" checked>Request</label></center>");
-    sb_html.append("</div></div><div class=\"col-xs-4\"><div class=\"checkbox\">");
-    sb_html.append("<center><label><input id=\"conventional-cb\" type=\"checkbox\" value=\".conventional\" checked>Conventional</label></center></div>");
-    sb_html.append("</div><div class=\"col-xs-4\"><div class=\"checkbox\"><center><label><input id=\"inform-cb\" type=\"checkbox\" value=\".inform\" checked>Inform</label></center>");
-    sb_html.append("</div></div></div></div>");
-    */
+
     try {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder db = dbf.newDocumentBuilder();
@@ -52,7 +44,7 @@ public class OutputFormatter {
       nl = doc.getElementsByTagName("powerannotations");
       if (nl != null && nl.getLength() > 0) {
         Node node = (Node) nl.item(0);
-        nl = node.getChildNodes(); //getElementsbyTagName("powerannotation");
+        nl = node.getChildNodes();
         if (nl != null && nl.getLength() > 0) {
           for (int i = 0 ; i < nl.getLength(); i++) {
             node = nl.item(i);
@@ -76,60 +68,6 @@ public class OutputFormatter {
     }
      
     return "ERROR";
-  }
-
-  private static String formatMessage(Message m) {
-    StringBuilder sb = new StringBuilder();
-    
-    sb.append("<div class=\"panel panel-default\">");
-
-    // Subject
-    sb.append("<div class=\"panel-heading\"><h3 class=\"panel-title\">"+m.subject+"</h3></div>");
-    sb.append("<div class=\"panel-body\">");
-
-    // From
-    sb.append("<b>"+m.from.name+"</b><br>");
-
-    // To
-    sb.append("to ");
-    for (Person p : m.to) {
-      sb.append(p.name+", ");
-    }
-    for (Person p : m.cc) {
-      sb.append(p.name+", ");
-    }
-    sb.append("<br><br>");
-
-    // Body
-    sb.append("<table><col style=\"width:150px\">");
-    for (DFU dfu : m.content) {
-      if (dfu.da.equals("FILLER")) {
-        sb.append("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>");
-      }
-      else {
-      //sb.append("<font color=\""+color+"\">"+dfu.DA+": </font>");
-        //String da_class = getDAClass(dfu.da);
-        sb.append("<tr>");
-        //sb.append("<td><div class=\""+da_class+"\">"+dfu.da+"</div></td>");
-
-        sb.append("<td>");
-
-        if (dfu.odp)
-          sb.append("<mark>"+dfu.text+"</mark> (ODP)");
-        else
-          sb.append(dfu.text);
-
-        sb.append("</td>");
-        sb.append("</tr>");
-      }
-
-      //sb.append("<br>");
-    }
-    sb.append("</table>");
-
-    sb.append("</div></div>");//sb.append("<br><br></div></div>");
-
-    return sb.toString();
   }
 
   private static String formatPowerAnnotation(PowerAnnotation pa) {
@@ -156,7 +94,7 @@ public class OutputFormatter {
   private static ArrayList<DFU> getContent(Node content) {
     ArrayList<DFU> c = new ArrayList<DFU>();
 
-    NodeList nl = content.getChildNodes();//getElementsByTagName("DFU");
+    NodeList nl = content.getChildNodes();
     if (nl != null && nl.getLength() > 0) {
         for (int i = 0 ; i < nl.getLength(); i++) {
           Node node = (Node) nl.item(i);

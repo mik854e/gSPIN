@@ -24,8 +24,7 @@
     <property name="test.dir" location="test"/>
     <property name="src.dir" location="src"/>
 
-    <property name="client.name" value="HttpClient"/>
-    <property name="server.name" value="HttpServer"/>
+    <property name="server.name" value="SpinServer"/>
     <property name="include.package.name" value="edu.columbia.ccls.**"/>
     <property name="exclude.package" value="edu.columbia.ccls.doc-files.**"/>
 

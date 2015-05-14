@@ -5,21 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="../jquery.min.js"></script>
-    <script src="../springy/springy.js"></script>
-    <script src="../springy/springyui.js"></script>
-    <script src="../gspin_main.js"></script>
-    <script src="../mustache.min.js"></script>
+    <script src="../lib/jquery.min.js"></script>
+    <script src="../lib/springy.js"></script>
+    <script src="../lib/springyui.js"></script>
+    <script src="../js/gspin_main.js"></script>
+    <script src="../lib/mustache.min.js"></script>
 
     <!-- Bootstrap -->
     <link href="../bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../style.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 
   </head>
 
   <body>
   	<div class="page-header">
-      <h4><center>gSPIN Analysis</center></h4>
+      <h3><center>gSPIN Analysis</center></h3>
     </div>
 
   	<div class="loading" id="loading">
@@ -32,15 +32,21 @@
 			</div>
 		</div>
 
-		<div class="power-graph" hidden>
+		<div id="error" hidden>
+			<div class="alert alert-danger" role="alert">
+				Error sending request to server.
+			</div>
+		</div>
+
+		<div class="row" id="power-graph" hidden>
 			<center>
-				<canvas id="springydemo" />
+				<canvas id="graph" width="640" height="300" />
 			</center>
 		</div>
 
 		<div id="email-panel" hidden>
 
-			<div class="row" align="center">
+			<div class="row" id="cb-bar" align="center">
     		<div class="col-xs-4">
     			<div class="checkbox">
     				<label><input id="request-cb" type="checkbox" value="tr.request" checked>Request</label>
@@ -61,8 +67,7 @@
 	   	</div>
 
 	   	<div class="emails" />
-		</div>
-    
+		</div> 
 
     <script id="emails" type="text/template"/>
 			{{#emails}}
