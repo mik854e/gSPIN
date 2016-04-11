@@ -18,15 +18,7 @@ function getCurrentTabUrl(callback) {
 }
 
 function clickHandler() {
-  getCurrentTabUrl(function(url) {
-    chrome.windows.create({
-        url: 'html/gspin_main.html',
-        type: 'popup',
-        //title: 'gSPIN',
-        width: 700,
-        height: 200
-    }); 
-        
+  getCurrentTabUrl(function(url) {    
     var inbox = url.match(/.+#inbox\/(.+)/);
     var search = url.match(/.+#search\/.+\/(.+)/);
     var threadID;
@@ -44,26 +36,23 @@ function clickHandler() {
                isDialog: $('#dialoganal').prop('checked'),
                isGraph: $('#powerpred').prop('checked')};
 
-    chrome.runtime.sendMessage(msg);
+    chrome.windows.create({
+      url: 'html/gspin_main.html#' + JSON.stringify(msg),
+      type: 'popup',
+      width: 700,
+      height: 200
+    }); 
   });  
 }
 
 function isGmailThread() {
-  var threadID = null;
-
   getCurrentTabUrl(function(url) {
       var inbox = url.match(/.+#inbox\/(.+)/);
       var search = url.match(/.+#search\/.+\/(.+)/);
 
-      if (inbox)
-        threadID = inbox[1];
-      else if (search)
-        threadID = search[1];
-      else {
+      if (!inbox && !search)
         renderContent();
-      }
   });
-  return threadID;
 }              
 
 function renderContent() {

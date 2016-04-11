@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
-  chrome.runtime.onMessage.addListener(
-    function(msg, sender, sendResponse) {
-      sendRequest(msg);
-  });
+  console.log('DOM loaded.');
+
+  var msg =  JSON.parse(window.location.hash.substring(1));
+  sendRequest(msg.threadID, msg.isGraph, msg.isDialog);
 
   $("#request-cb").on("click", function() {handleCheckbox(this)});
   $("#conventional-cb").on("click", function() {handleCheckbox(this)});
   $("#inform-cb").on("click", function() {handleCheckbox(this)});
 });
 
-function sendRequest(msg) {
+function sendRequest(threadID, isGraph, isDialog) {
   interactiveSignIn(function(token) {
-    sendSpinRequest(msg.threadID, token, function(response) {
-      //console.log(response);
+    sendSpinRequest(threadID, token, function(response) {
+      console.log(response);
       var data = JSON.parse(response);
       var edges = JSON.parse(data.graph);
       var emails = JSON.parse(data.emails);
@@ -20,18 +20,16 @@ function sendRequest(msg) {
       
       $('#loading').hide();
 
-      if (msg.isGraph)
+      if (isGraph)
         showGraph(edges);
 
-      if (msg.isDialog)
+      if (isDialog)
         showDialog(emails);
 
       chrome.windows.getCurrent(function(window) {
         var id = window.id;
         chrome.windows.update(id, {height:800});
       });
-
-      //document.defaultView.resizeWinTo(700,700);
     });
   });
 }
@@ -51,6 +49,7 @@ function sendSpinRequest(threadID, token, callback) {
   x.onreadystatechange=function() {
     if (x.readyState === 4) { 
       if (x.status == 200) {
+        console.log('RESPONSE');
         var response = x.response; 
         callback(response);
       }
