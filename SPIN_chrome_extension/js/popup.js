@@ -19,14 +19,14 @@ function getCurrentTabUrl(callback) {
 
 function clickHandler() {
   getCurrentTabUrl(function(url) {    
-    var inbox = url.match(/.+#inbox\/(.+)/);
-    var search = url.match(/.+#search\/.+\/(.+)/);
+    var one_part = url.match(/.+#[A-z]+\/([^/]+)$/);
+    var two_part = url.match(/.+#[A-z]+\/[^/]+\/([^/]+)$/);
+    
     var threadID;
-
-    if (inbox)
-      threadID = inbox[1];
-    else if (search)
-      threadID = search[1];
+    if (one_part)
+      threadID = one_part[1];
+    else if (two_part)
+      threadID = two_part[1];
     else {
       renderContent("Select a Gmail thread.");
       return;
@@ -47,11 +47,15 @@ function clickHandler() {
 
 function isGmailThread() {
   getCurrentTabUrl(function(url) {
-      var inbox = url.match(/.+#inbox\/(.+)/);
-      var search = url.match(/.+#search\/.+\/(.+)/);
+    // URIs seem to have either one or two parts before the 
+    // threadID
+    //  - #spam/1540840f836336ea
+    //  - #search/searchquery/153de17a073a9cb9
+    var one_part = url.match(/.+#[A-z]+\/(.+)/);
+    var two_part = url.match(/.+#[A-z]+\/.+\/(.+)/);
 
-      if (!inbox && !search)
-        renderContent();
+    if (!one_part && !two_part)
+      renderContent();
   });
 }              
 
