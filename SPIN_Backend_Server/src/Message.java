@@ -39,9 +39,12 @@ class Message {
 		for (Person p : this.to) {
       		sb_to.append(p.name+", ");
     	}
+
     	for (Person p : this.cc) {
       		sb_to.append(p.name+", ");
     	}
+
+    	sb_to.delete(sb_to.length() - 2, sb_to.length() - 1);
 
     	for (DFU dfu : this.content) {
     		sb_body.append(dfu.toString());
