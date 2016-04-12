@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   console.log('DOM loaded.');
 
+  document.title = "gSpin";
+
   var msg =  JSON.parse(window.location.hash.substring(1));
   sendRequest(msg.threadID, msg.isGraph, msg.isDialog);
 
